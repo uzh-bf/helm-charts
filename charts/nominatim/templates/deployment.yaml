@@ -31,28 +31,29 @@ spec:
       serviceAccountName: {{ include "nominatim.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if  .Values.persistence.enabled }}
-      initContainers:
-      - name: volume-permissions
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: IfNotPresent
-        command:
-          - /bin/bash
-          - -ec
-          - |
-            chmod -R 750 /var/lib/postgresql/12/main
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: nominatim
-            mountPath: /var/lib/postgresql/12/main
-            subPath: postgresql
-      {{- end }}
+{{/*      {{- if  .Values.persistence.enabled }}*/}}
+{{/*      initContainers:*/}}
+{{/*      - name: volume-permissions*/}}
+{{/*        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"*/}}
+{{/*        imagePullPolicy: IfNotPresent*/}}
+{{/*        command:*/}}
+{{/*          - /bin/bash*/}}
+{{/*          - -ec*/}}
+{{/*          - |*/}}
+{{/*            chmod -R 750 /var/lib/postgresql/12/main*/}}
+{{/*        securityContext:*/}}
+{{/*          runAsUser: 0*/}}
+{{/*        volumeMounts:*/}}
+{{/*          - name: nominatim*/}}
+{{/*            mountPath: /var/lib/postgresql/12/main*/}}
+{{/*            subPath: postgresql*/}}
+{{/*      {{- end }}*/}}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          workingDir: /nominatim
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             {{- if .Values.extraEnv }}
@@ -62,26 +63,28 @@ spec:
               value: {{ .Values.PBF_URL | quote }}
             - name: REPLICATION_URL
               value: {{ .Values.REPLICATION_URL | quote  }}
+            - name: NOMINATIM_DATABASE_MODULE_PATH
+              value: {{ .Values.NOMINATIM_DATABASE_MODULE_PATH | quote }}
+            - name: NOMINATIM_DATABASE_DSN
+              value: {{ include "nominatim.databaseUrl" . }}
+          command:
+            - /bin/bash
+            - -ec
+            - |
+                cd ${PROJECT_DIR} && nominatim refresh --website
+                /usr/sbin/apache2ctl -D FOREGROUND
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
-            - name: postresql
-              containerPort: 8080
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          startupProbe:
-            exec:
-              command:
-                - cat
-                - /var/lib/postgresql/12/main/import-finished
+{{/*          livenessProbe:*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /*/}}
+{{/*              port: http*/}}
+{{/*          readinessProbe:*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /*/}}
+{{/*              port: http*/}}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
@@ -93,11 +96,6 @@ spec:
               subPath: flatnode
             - mountPath: /dev/shm
               name: dshm
-          startupProbe:
-            exec:
-              command:
-                - cat
-                - /var/lib/postgresql/12/main/import-finished
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

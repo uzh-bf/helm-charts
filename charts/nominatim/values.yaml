@@ -28,8 +28,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-PBF_URL: https://download.geofabrik.de/europe-latest.osm.pbf
-REPLICATION_URL: https://download.geofabrik.de/europe-updates/
+PBF_URL: https://download.geofabrik.de/europe/germany/sachsen-latest.osm.pbf
+#PBF_URL: https://download.geofabrik.de/europe-latest.osm.pbf
+REPLICATION_URL: https://download.geofabrik.de/europe/germany/sachsen-updates/
+#REPLICATION_URL: https://download.geofabrik.de/europe-updates/
+NOMINATIM_DATABASE_MODULE_PATH: /bitnami
 
 
 ## An array to add extra environment variables
@@ -156,3 +159,39 @@ persistence:
   ## @param persistence.existingClaim The name of an existing PVC to use for persistence
   ##
   existingClaim:
+
+postgresql:
+  enabled: true
+  image:
+    registry:
+    repository: robjuz/postgresql-nominatim
+    tag: latest
+
+  postgresqlPostgresPassword: nominatim
+  postgresqlUsername: nominatim
+  postgresqlPassword: nominatim
+#  postgresqlDatabase: nominatim
+
+  persistence:
+    size: 500Gi
+
+  postgresqlConfiguration:
+
+externalDatabase:
+  enabled: false
+
+  ## @param externalDatabase.host External Database server host
+  ##
+  host: localhost
+  ## @param externalDatabase.port External Database server port
+  ##
+  port: 5432
+  ## @param externalDatabase.user External Database username
+  ##
+  user: nominatim
+  ## @param externalDatabase.password External Database user password
+  ##
+  password: ""
+  ## @param externalDatabase.database External Database database name
+  ##
+  database: nominatim
