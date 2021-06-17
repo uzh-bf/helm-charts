@@ -40,7 +40,7 @@ REPLICATION_URL: https://download.geofabrik.de/europe-updates/
 ##
 extraEnv:
   - name: IMPORT_WIKIPEDIA
-    value: "false"
+    value: "true"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -53,8 +53,7 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext:
-  fsGroup: 101
+podSecurityContext: {}
 
 securityContext: {}
   # capabilities:
@@ -71,17 +70,17 @@ service:
 ingress:
   ## @param ingress.enabled Enable ingress record generation for nominatim
   ##
-  enabled: false
+  enabled: true
   ## @param ingress.certManager Add the corresponding annotations for cert-manager integration
   ##
-  certManager: false
+  certManager: true
   ## @param ingress.annotations Additional custom annotations for the ingress record
   ## NOTE: If `ingress.certManager=true`, annotation `kubernetes.io/tls-acme: "true"` will automatically be added
   ##
   annotations: {}
   ## @param ingress.hostname Default host for the ingress record
   ##
-  hostname: nominatim.local
+  hostname: nominatim.k8s.hw.ag
   ## @param ingress.tls Enable TLS configuration for the host defined at `ingress.hostname` parameter
   ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.hostname }}`
   ## You can:
@@ -89,7 +88,7 @@ ingress:
   ##   - Relay on cert-manager to create it by setting `ingress.certManager=true`
   ##   - Relay on Helm to create self-signed certificates by setting `ingress.tls=true` and `ingress.certManager=false`
   ##
-  tls: false
+  tls: true
   ## @param ingress.secrets Custom TLS certificates as secrets
   ## NOTE: 'key' and 'certificate' are expected in PEM format
   ## NOTE: 'name' should line up with a 'secretName' set further up
@@ -152,7 +151,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size Persistent Volume size
   ##
-  size: 100Gi
+  size: 500Gi
   ## @param persistence.existingClaim The name of an existing PVC to use for persistence
   ##
   existingClaim:

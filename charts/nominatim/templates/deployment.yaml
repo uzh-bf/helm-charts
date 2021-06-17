@@ -69,19 +69,20 @@ spec:
             - name: postresql
               containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          startupProbe:
-            exec:
-              command:
-                - cat
-                - /var/lib/postgresql/12/main/import-finished
+{{/*          livenessProbe:*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /*/}}
+{{/*              port: http*/}}
+{{/*          readinessProbe:*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /*/}}
+{{/*              port: http*/}}
+{{/*          startupProbe:*/}}
+{{/*            exec:*/}}
+{{/*              command:*/}}
+{{/*                - test*/}}
+{{/*                - -f*/}}
+{{/*                - /var/lib/postgresql/12/main/import-finished*/}}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
@@ -93,11 +94,6 @@ spec:
               subPath: flatnode
             - mountPath: /dev/shm
               name: dshm
-          startupProbe:
-            exec:
-              command:
-                - cat
-                - /var/lib/postgresql/12/main/import-finished
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

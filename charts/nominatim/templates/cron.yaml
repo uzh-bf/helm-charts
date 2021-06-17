@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ include "nominatim.fullname" . }}-updates
@@ -17,7 +17,7 @@ spec:
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               env:
                 {{- if .Values.extraEnv }}
-                  {{- include "common.tplvalues.render" (dict "value" .Values.extraEnv "context" $) | nindent 12 }}
+                  {{- include "common.tplvalues.render" (dict "value" .Values.extraEnv "context" $) | nindent 16 }}
                 {{- end }}
                 - name: PBF_URL
                   value: {{ .Values.PBF_URL | quote }}
