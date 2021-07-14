@@ -1,0 +1,12 @@
+{{- if not empty .Values.exports }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kimai2.name" . }}-exports
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: primary
+data:
+  {{- range $key, $val := .Values.exports }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}

@@ -129,6 +129,8 @@ configuration: |-
           main:
               path: php://stderr
 
+exports: {}
+
 persistence:
   ## @param persistence.enabled Enable persistence using Persistent Volume Claims
   ##
