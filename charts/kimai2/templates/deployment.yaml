@@ -78,7 +78,7 @@ spec:
               mountPath: /opt/kimai/config/packages/local.yaml
               subPath: local.yaml
             {{- end }}
-            {{- if not empty .Values.exports }}
+            {{- if not (empty .Values.exports) }}
             {{- range $key, $val := .Values.exports }}
             - mountPath: /opt/kimai/var/export/{{ $key }}
               name: exports
@@ -110,7 +110,7 @@ spec:
           configMap:
             name: {{ include "kimai2.name" . }}-config
         {{- end }}
-        {{- if not empty .Values.exports }}
+        {{- if not (empty .Values.exports) }}
         - name: exports
           configMap:
             name: {{ include "kimai2.name" . }}-exports

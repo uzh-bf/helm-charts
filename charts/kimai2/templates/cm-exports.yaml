@@ -1,4 +1,4 @@
-{{- if not empty .Values.exports }}
+{{- if not (empty .Values.exports) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
