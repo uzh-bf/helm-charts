@@ -8,6 +8,6 @@ metadata:
     app.kubernetes.io/component: primary
 data:
   {{- range $key, $val := .Values.exports }}
-  {{ $key }}: {{ $val | quote }}
+  {{ $key }}: {{ .Files.Get $val | quote }}
   {{- end }}
 {{- end }}
