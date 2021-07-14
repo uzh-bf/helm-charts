@@ -10,3 +10,4 @@ data:
   {{- range $key, $val := .Values.exports }}
   {{ $key }}: {{ $val | quote }}
   {{- end }}
+{{- end }}

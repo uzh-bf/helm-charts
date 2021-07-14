@@ -9,4 +9,4 @@ metadata:
 data:
   local.yaml: |-
     {{ .Values.configuration | nindent 4 }}
-    {{- end -}}
+{{- end -}}
