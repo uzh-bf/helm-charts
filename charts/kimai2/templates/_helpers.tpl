@@ -123,5 +123,5 @@ Return the MariaDB Password
 Create the database URL. For the time being, this supports only an integrated MySQL
 */}}
 {{- define "kimai2.databaseUrl" -}}
-mysql://{{ include "kimai2.databaseUser" . }}:{{ include "kimai2.databasePassword" . }}@{{ include "kimai2.databaseHost" . }}/{{ include "kimai2.databaseName" . }}
+mysql://{{ include "kimai2.databaseUser" . }}:{{ include "kimai2.databasePassword" . }}@{{ include "kimai2.databaseHost" . }}/{{ include "kimai2.databaseName" . }}?serverVersion={{ .Values.dbServerVersion }}
 {{- end }}

@@ -16,6 +16,8 @@ replicaCount: 1
 updateStrategy:
   type: Recreate
 
+dbServerVersion: mariadb-10.3
+
 image:
   repository: kimai/kimai2
   pullPolicy: IfNotPresent
